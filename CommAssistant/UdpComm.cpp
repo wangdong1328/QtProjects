@@ -1,3 +1,4 @@
+
 #include "UdpComm.h"
 #include <QNetworkDatagram>
 #include "CommManager.h"
@@ -58,7 +59,7 @@ int CUdpComm::Send(const QString strMsg)
 void CUdpComm::OnErrorOccurredSlot(QAbstractSocket::SocketError socketError)
 {
 	//上报网络错误结果
-	CCommManager::GetInstance()->RecvMsg(ECOMMTYPE_UDP, QString("[UDP]: SocketError type is %1. ")
+	CCommManager::GetInstance()->RecvMsg(ECOMMTYPE_UDP, QString("[UDP]: SocketError code is %1. ")
 		.arg((int)socketError));
 }
 

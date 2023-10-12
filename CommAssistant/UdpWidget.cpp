@@ -16,6 +16,7 @@ CUdpWidget::~CUdpWidget()
 
 void CUdpWidget::InitUI()
 {
+	//打开按钮
 	connect(ui.pushButton_open, &QPushButton::clicked, this, [=]()
 		{
 			ui.pushButton_close->setEnabled(true);
@@ -31,6 +32,7 @@ void CUdpWidget::InitUI()
 			CCommManager::GetInstance()->Register(ECOMMTYPE_UDP, sEndPointSettings);
 		});
 
+	//处理关闭按钮
 	connect(ui.pushButton_close, &QPushButton::clicked, this, [=]()
 		{
 			ui.pushButton_close->setEnabled(false);
@@ -40,6 +42,7 @@ void CUdpWidget::InitUI()
 			CCommManager::GetInstance()->Unregister(ECOMMTYPE_UDP);
 		});
 
+	//处理发送按钮
 	connect(ui.pushButton_send, &QPushButton::clicked, this, [=]()
 		{
 			QString strDateTime = QDateTime::currentDateTime().toString("yyyy-MM-dd_hh:mm:ss.zzz");
