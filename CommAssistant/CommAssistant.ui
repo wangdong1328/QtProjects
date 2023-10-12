@@ -6,20 +6,41 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>672</width>
-    <height>489</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>CCommAssistant</string>
   </property>
-  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="CUdpWidget" name="tab_udp">
+       <attribute name="title">
+        <string>UDP通信</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout"/>
+      </widget>
+      <widget class="QWidget" name="tab_tcp">
+       <attribute name="title">
+        <string>TCP通信</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>672</width>
+     <width>800</width>
      <height>21</height>
     </rect>
    </property>
@@ -35,6 +56,14 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>CUdpWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">../../../UdpWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="CommAssistant.qrc"/>
  </resources>

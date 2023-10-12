@@ -20,24 +20,21 @@ class CUdpComm  : public CBaseComm
 public:
 	CUdpComm(QObject *parent);
 	~CUdpComm();
-	
-	/**
-	 * @brief  :设置本地端点
-	 *
-	 * @param  :strLocalIPAddr,[I],本地IP地址
-	 * @param  :usLocalPort,[I],本地端口
-	 * @return :void
-	 */
-	void SetLocalEndPoint(const QString strLocalIPAddr, const unsigned short usLocalPort);
 
 	/**
-	 * @brief  :设置对端端口
+	 * @brief  :设置端点
 	 *
-	 * @param  :strPeerIPAddr
-	 * @param  :usPeerPort
+	 * @param  :sEndPoint
 	 * @return :void
 	 */
-	void SetPeerEndPoint(const QString strPeerIPAddr, const unsigned short usPeerPort);
+	void BindEndPoint(const SEndPointSettings sEndPoint) override;
+
+	/**
+	 * @brief  :解除绑定的端点
+	 *
+	 * @return :void
+	 */
+	void UnBindEndPoint() override;
 
 	/**
 	 * @brief  :发送消息

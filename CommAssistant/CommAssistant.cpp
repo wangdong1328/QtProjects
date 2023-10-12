@@ -1,4 +1,6 @@
 #include "CommAssistant.h"
+#include "CommManager.h"
+#include <QDateTime>
 
 CCommAssistant::CCommAssistant(QWidget *parent)
     : QMainWindow(parent)
@@ -7,4 +9,10 @@ CCommAssistant::CCommAssistant(QWidget *parent)
 }
 
 CCommAssistant::~CCommAssistant()
-{}
+{
+}
+
+void CCommAssistant::InitUI()
+{
+    
+}

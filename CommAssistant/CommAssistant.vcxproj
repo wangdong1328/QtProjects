@@ -38,7 +38,7 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>6.5.3_msvc2019_64</QtInstall>
-    <QtModules>core;gui;network;widgets</QtModules>
+    <QtModules>core;gui;network;widgets;serialport</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
@@ -92,11 +92,13 @@
     <ClCompile Include="BaseComm.cpp" />
     <ClCompile Include="CommManager.cpp" />
     <ClCompile Include="UdpComm.cpp" />
+    <ClCompile Include="UdpWidget.cpp" />
     <QtRcc Include="CommAssistant.qrc" />
     <QtUic Include="CommAssistant.ui" />
     <QtMoc Include="CommAssistant.h" />
     <ClCompile Include="CommAssistant.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtUic Include="UdpWidget.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="UdpComm.h" />
@@ -109,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Comm_Def.h" />
+    <QtMoc Include="UdpWidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
