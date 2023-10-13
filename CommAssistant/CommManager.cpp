@@ -48,21 +48,21 @@ CCommManager* CCommManager::GetInstance()
 	return &instance;
 }
 
-int CCommManager::Send(ECommType eCommType, const QString strMsg)
+int CCommManager::Send(ECommType eCommType, const QByteArray baContent, int iTimeInterval)
 {
 	int iRet = -1;
 	QMap<ECommType, CBaseComm*>::iterator iter = m_mapComms.find(eCommType);
 	if (iter != m_mapComms.end())
 	{
-		iRet = iter.value()->Send(strMsg);
+		iRet = iter.value()->Send(baContent, iTimeInterval);
 	}
 
 	return iRet;
 }
 
-void CCommManager::RecvMsg(ECommType eCommType, const QString strMsg)
+void CCommManager::RecvMsg(ECommType eCommType, const QByteArray baContent)
 {
-	emit RecvMsgSignal(eCommType, strMsg);
+	emit RecvMsgSignal(eCommType, baContent);
 }
 
 void CCommManager::Register(ECommType eCommType, const SEndPointSettings sEndPoint)

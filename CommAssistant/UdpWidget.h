@@ -18,13 +18,13 @@ public:
 	 */
 	void InitUI();
 
-
 	/**
 	 * @brief  :获取当前时间
 	 *
 	 * @return :QString
 	 */
 	static QString GetCurrentDateTime();
+
 private:
 	Ui::CUdpWidgetClass ui;
 };

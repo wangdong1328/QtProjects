@@ -3,6 +3,8 @@
 #include <QNetworkDatagram>
 #include "CommManager.h"
 
+static const int MAX_LENGTH = 2048;
+
 CUdpComm::CUdpComm(QObject* parent)
 	: CBaseComm(parent)
 {
@@ -32,7 +34,8 @@ void CUdpComm::BindEndPoint(const SEndPointSettings sEndPoint)
 	else
 	{
 		//上报网络信息
-		CCommManager::GetInstance()->RecvMsg(ECOMMTYPE_UDP, QString("[UDP]: bind port failed!"));
+		CCommManager::GetInstance()->RecvMsg(ECOMMTYPE_UDP, QString("[UDP]: bind port failed!")
+			.toUtf8());
 	}
 }
 
@@ -43,14 +46,34 @@ void CUdpComm::UnBindEndPoint()
 	m_usPeerPort = 0;
 }
 
-int CUdpComm::Send(const QString strMsg)
+int CUdpComm::Send(QByteArray baContent, int iTimeInterval)
 {
 	int iRet = 0;
 	//发送消息不为空时，发送消息
-	if (m_pUdpSocket && !strMsg.isEmpty())
+	if (m_pUdpSocket && !baContent.isEmpty())
 	{
-		iRet = m_pUdpSocket->writeDatagram(strMsg.toUtf8(), QHostAddress(m_strPeerIPAddr), 
-			m_usPeerPort);
+		int iSize = baContent.count();
+		int iSendPackageCount = baContent.count() / MAX_LENGTH;
+		if (0 != (baContent.count() % MAX_LENGTH))
+		{
+			iSendPackageCount++;
+		}
+
+		for (size_t iIndex = 0; iIndex < iSendPackageCount; iIndex++)
+		{
+			if ((iIndex + 1) == iSendPackageCount)
+			{
+				m_pUdpSocket->writeDatagram(baContent, QHostAddress(m_strPeerIPAddr),
+					m_usPeerPort);
+			}
+			else
+			{
+				m_pUdpSocket->writeDatagram(baContent.mid(0, MAX_LENGTH),
+					QHostAddress(m_strPeerIPAddr), m_usPeerPort);
+
+				baContent = baContent.mid(MAX_LENGTH);
+			}
+		}
 	}
 
 	return iRet;
@@ -138,8 +161,8 @@ void CUdpComm::OnErrorOccurredSlot(QAbstractSocket::SocketError socketError)
 		break;
 	}
 	//上报网络错误结果
-	CCommManager::GetInstance()->RecvMsg(ECOMMTYPE_UDP, QString("[UDP]: SocketError reason is %1. ")
-		.arg(strErrorReason));
+	CCommManager::GetInstance()->RecvMsg(ECOMMTYPE_UDP, 
+		QString("[UDP]: SocketError reason is %1. ").arg(strErrorReason).toUtf8());
 }
 
 void CUdpComm::OnReadPendingDatagramsSlot()
@@ -148,7 +171,7 @@ void CUdpComm::OnReadPendingDatagramsSlot()
 	{
 		QNetworkDatagram datagram = m_pUdpSocket->receiveDatagram();
 
-		if ((datagram.senderAddress().toString() == m_strPeerIPAddr) && 
+		if ((datagram.senderAddress().toString() == m_strPeerIPAddr) &&
 			(m_usPeerPort == datagram.senderPort()))
 		{
 			CCommManager::GetInstance()->RecvMsg(ECOMMTYPE_UDP, datagram.data());

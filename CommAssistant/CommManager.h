@@ -26,20 +26,21 @@ public:
 	/**
 	 * @brief  :发送文件内容接口
 	 *
-	 * @param  :strMsg
+	 * @param  :baContent, 发送的内容
 	 * @param  :eCommType, 通信类型
+	 * @param  :iTimeInterval, 时间间隔
 	 * @return :int
 	 */
-	int Send(ECommType eCommType, const QString strMsg);
+	int Send(ECommType eCommType, const QByteArray baContent, int iTimeInterval = 10);
 
 	/**
 	 * @brief  :接收消息分发
 	 *
-	 * @param  :strMsg
+	 * @param  :baContent，接收的内容
 	 * @param  :eCommType, 通信类型
 	 * @return :void
 	 */
-	void RecvMsg(ECommType eCommType, const QString strMsg);
+	void RecvMsg(ECommType eCommType, const QByteArray baContent);
 
 	/**
 	 * @brief  : 根据通信类型注册对应通信类

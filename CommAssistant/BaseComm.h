@@ -14,10 +14,10 @@ public:
 	/**
 	 * @brief  :发送文件内容接口
 	 *
-	 * @param  :strMsg
+	 * @param  :baContent, 发送的内容
 	 * @return :int
 	 */
-	virtual int Send(const QString strMsg) = 0;
+	virtual int Send(QByteArray baContent, int iTimeInterval) = 0;
 
 	/**
 	 * @brief  :设置端点
@@ -35,5 +35,5 @@ public:
 	virtual void UnBindEndPoint() = 0;
 
 signals:
-	void ReportInfoSignal(QString);
+	void ReportInfoSignal(QByteArray);
 };

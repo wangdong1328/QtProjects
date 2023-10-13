@@ -39,10 +39,11 @@ public:
 	/**
 	 * @brief  :发送消息
 	 *
-	 * @param  :strMsg
+	 * @param  :baContent,发送的内容
+	 * @iTimeInterval  :时间间隔
 	 * @return :int
 	 */
-	int Send(const QString strMsg) override;
+	int Send(QByteArray baContent, int iTimeInterval) override;
 
 private slots:
 	//接收报文槽函数
