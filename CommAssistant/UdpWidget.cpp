@@ -57,6 +57,12 @@ void CUdpWidget::InitUI()
 			
 		});
 
+	//处理发送按钮
+	connect(ui.pushButton_clear, &QPushButton::clicked, this, [=]()
+		{
+			ui.plainTextEdit_content->clear();
+		});
+
 	//初始化禁用关闭服务器按钮
 	ui.pushButton_close->setEnabled(false);
 	ui.pushButton_send->setEnabled(false);
