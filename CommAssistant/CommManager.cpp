@@ -72,7 +72,6 @@ void CCommManager::Register(ECommType eCommType, const SEndPointSettings sEndPoi
 	{
 		iter.value()->BindEndPoint(sEndPoint);
 	}
-
 }
 
 void CCommManager::Unregister(ECommType eCommType)

@@ -45,12 +45,10 @@ void CUdpWidget::InitUI()
 	//处理发送按钮
 	connect(ui.pushButton_send, &QPushButton::clicked, this, [=]()
 		{
-			QString strDateTime = QDateTime::currentDateTime().toString("yyyy-MM-dd_hh:mm:ss.zzz");
-
 			if (CCommManager::GetInstance()->Send(ECOMMTYPE_UDP, ui.lineEdit_msg->text()) > 0)
 			{
-				ui.plainTextEdit_content->appendPlainText("[S" + strDateTime + "] " + 
-					ui.lineEdit_msg->text());
+				ui.plainTextEdit_content->appendPlainText("[S" + GetCurrentDateTime() + "] " 
+					+ ui.lineEdit_msg->text());
 
 				ui.lineEdit_msg->clear();
 			}
@@ -74,11 +72,15 @@ void CUdpWidget::InitUI()
 	connect(CCommManager::GetInstance(), &CCommManager::RecvMsgSignal, this,
 		[=](ECommType eCommType, const QString strMsg)
 		{
-			QString strDateTime = QDateTime::currentDateTime().toString("yyyy-MM-dd_hh:mm:ss.zzz");
-
 			if (ECOMMTYPE_UDP == eCommType)
 			{
-				ui.plainTextEdit_content->appendPlainText("[R" + strDateTime + "] " + strMsg);
+				ui.plainTextEdit_content->appendPlainText("[R" + GetCurrentDateTime() + "] "
+					+ strMsg);
 			}
 		});
+}
+
+QString CUdpWidget::GetCurrentDateTime()
+{
+	return QDateTime::currentDateTime().toString("yyyy-MM-dd_hh:mm:ss.zzz");
 }
