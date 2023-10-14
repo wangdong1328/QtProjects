@@ -18,15 +18,14 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="CUdpWidget" name="tab_udp">
        <attribute name="title">
         <string>UDP通信</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout"/>
       </widget>
-      <widget class="QWidget" name="tab_tcp">
+      <widget class="CTcpWidget" name="tab_tcp">
        <attribute name="title">
         <string>TCP通信</string>
        </attribute>
@@ -90,7 +89,13 @@
   <customwidget>
    <class>CUdpWidget</class>
    <extends>QWidget</extends>
-   <header location="global">../../../UdpWidget.h</header>
+   <header>../../../UdpWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CTcpWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">../../../TcpWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

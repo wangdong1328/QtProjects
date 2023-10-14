@@ -13,7 +13,6 @@ CUdpComm::CUdpComm(QObject* parent)
 	connect(m_pUdpSocket, &QUdpSocket::errorOccurred, this, &CUdpComm::OnErrorOccurredSlot);
 }
 
-
 CUdpComm::~CUdpComm()
 {
 	m_pUdpSocket->close();

@@ -92,6 +92,9 @@
     <ClCompile Include="BaseComm.cpp" />
     <ClCompile Include="CommManager.cpp" />
     <ClCompile Include="CustomIntValidator.cpp" />
+    <ClCompile Include="TcpClientComm.cpp" />
+    <ClCompile Include="TcpServerComm.cpp" />
+    <ClCompile Include="TcpWidget.cpp" />
     <ClCompile Include="UdpComm.cpp" />
     <ClCompile Include="UdpWidget.cpp" />
     <QtRcc Include="CommAssistant.qrc" />
@@ -99,6 +102,7 @@
     <QtMoc Include="CommAssistant.h" />
     <ClCompile Include="CommAssistant.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtUic Include="TcpWidget.ui" />
     <QtUic Include="UdpWidget.ui" />
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +116,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Comm_Def.h" />
+    <QtMoc Include="TcpServerComm.h" />
+    <QtMoc Include="TcpClientComm.h" />
+    <QtMoc Include="TcpWidget.h" />
     <QtMoc Include="CustomIntValidator.h" />
     <QtMoc Include="UdpWidget.h" />
   </ItemGroup>

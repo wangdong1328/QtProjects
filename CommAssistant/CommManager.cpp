@@ -12,14 +12,14 @@ CCommManager::CCommManager(QObject *parent)
 		switch (ECommType(i))
 		{
 		case ECOMMTYPE_UDP:
-			m_pUdpComm = new CUdpComm(nullptr);
+			m_pUdpComm = new CUdpComm();
 			m_mapComms[ECOMMTYPE_UDP] = m_pUdpComm;
 			break;
 		case ECOMMTYPE_TCP_SERVER:
 			break;
 		case ECOMMTYPE_TCP_CLIENT:
 			break;
-		case ECOMMTYPE_SERIEL:
+		case ECOMMTYPE_SERIAL:
 			break;
 		case ECOMMTYPE_TOTAL:
 			break;

@@ -1,34 +1,38 @@
-#include "UdpWidget.h"
-#include "Comm_Def.h"
+#include "TcpWidget.h"
+#include "CustomIntValidator.h"
 #include "CommManager.h"
 #include <QDateTime>
-#include "CustomIntValidator.h"
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QFile>
 
-CUdpWidget::CUdpWidget(QWidget* parent)
+CTcpWidget::CTcpWidget(QWidget *parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
 
+	//默认创建的时TCP通信的客户端
+	m_eCommType = ECOMMTYPE_TCP_CLIENT;
+
 	InitUI();
 }
 
-CUdpWidget::~CUdpWidget()
+CTcpWidget::~CTcpWidget()
 {}
 
-void CUdpWidget::InitUI()
+void CTcpWidget::InitUI()
 {
-	//设置输入格式
-	ui.lineEdit_localPort->setValidator(new CCustomIntValidator(1, 65535, this));
+	//设置服务器端点输入格式
 	ui.lineEdit_peerPort->setValidator(new CCustomIntValidator(1, 65535, this));
-	ui.lineEdit_localIp->setInputMask("000.000.000.000");
 	ui.lineEdit_peerIp->setInputMask("000.000.000.000");
 
-	//设置输入间隔
+	//设置输入间隔格式
 	ui.lineEdit_sendInterval->setValidator(new CCustomIntValidator(0, 10000, this));
 
+	//默认断开连接按钮置灰
+	ui.pushButton_close->setEnabled(false);
+	//初始化禁用发送按钮
+	ui.pushButton_send->setEnabled(false);
+	
 	//打开按钮
 	connect(ui.pushButton_open, &QPushButton::clicked, this, [=]()
 		{
@@ -37,12 +41,10 @@ void CUdpWidget::InitUI()
 			ui.pushButton_open->setEnabled(false);
 
 			SEndPointSettings sEndPointSettings;
-			sEndPointSettings.sLocalEndPoint.strIPAddr = ui.lineEdit_localIp->text();
-			sEndPointSettings.sLocalEndPoint.usPort = ui.lineEdit_localPort->text().toUShort();
 			sEndPointSettings.sPeerEndPoint.strIPAddr = ui.lineEdit_peerIp->text();
 			sEndPointSettings.sPeerEndPoint.usPort = ui.lineEdit_peerPort->text().toUShort();
 
-			CCommManager::GetInstance()->Register(ECOMMTYPE_UDP, sEndPointSettings);
+			CCommManager::GetInstance()->Register(m_eCommType, sEndPointSettings);
 		});
 
 	//处理关闭按钮
@@ -52,13 +54,13 @@ void CUdpWidget::InitUI()
 			ui.pushButton_send->setEnabled(false);
 			ui.pushButton_open->setEnabled(true);
 
-			CCommManager::GetInstance()->Unregister(ECOMMTYPE_UDP);
+			CCommManager::GetInstance()->Unregister(m_eCommType);
 		});
 
 	//处理发送按钮
 	connect(ui.pushButton_send, &QPushButton::clicked, this, [=]()
 		{
-			if (CCommManager::GetInstance()->Send(ECOMMTYPE_UDP, 
+			if (CCommManager::GetInstance()->Send(m_eCommType,
 			ui.lineEdit_msg->text().toUtf8()) > 0)
 			{
 				ui.plainTextEdit_content->appendPlainText("[S" + GetCurrentDateTime() + "] "
@@ -66,30 +68,20 @@ void CUdpWidget::InitUI()
 
 				ui.lineEdit_msg->clear();
 			}
-
 		});
 
-	//处理发送按钮
-	connect(ui.pushButton_clear, &QPushButton::clicked, this, [=]()
+	//处理选中服务器
+	connect(ui.checkBox_server, &QCheckBox::stateChanged, this, [&](int iValue)
 		{
-			ui.plainTextEdit_content->clear();
-		});
-
-	//初始化禁用关闭服务器按钮
-	ui.pushButton_close->setEnabled(false);
-	ui.pushButton_send->setEnabled(false);
-
-	//设置消息显示区只读
-	ui.plainTextEdit_content->setReadOnly(true);
-
-	//处理接收内容
-	connect(CCommManager::GetInstance(), &CCommManager::RecvMsgSignal, this,
-		[=](ECommType eCommType, const QString strMsg)
-		{
-			if (ECOMMTYPE_UDP == eCommType)
+			if (iValue > 0)
 			{
-				ui.plainTextEdit_content->appendPlainText("[R" + GetCurrentDateTime() + "] "
-					+ strMsg);
+				m_eCommType = ECOMMTYPE_TCP_SERVER;
+				ui.pushButton_open->setText("监听");
+			}
+			else
+			{
+				m_eCommType = ECOMMTYPE_TCP_CLIENT;
+				ui.pushButton_open->setText("连接");
 			}
 		});
 
@@ -108,7 +100,7 @@ void CUdpWidget::InitUI()
 					QFile file(strFilePath);
 					if (file.open(QIODevice::ReadOnly))
 					{
-						CCommManager::GetInstance()->Send(ECOMMTYPE_UDP, file.readAll(), ui.lineEdit_sendInterval->text().toInt());
+						CCommManager::GetInstance()->Send(m_eCommType, file.readAll(), ui.lineEdit_sendInterval->text().toInt());
 						file.close();
 					}
 					else
@@ -122,9 +114,17 @@ void CUdpWidget::InitUI()
 				}
 			}
 		});
+
+
+	//处理发送按钮
+	connect(ui.pushButton_clear, &QPushButton::clicked, this, [=]()
+		{
+			ui.plainTextEdit_content->clear();
+		});
 }
 
-QString CUdpWidget::GetCurrentDateTime()
+
+QString CTcpWidget::GetCurrentDateTime()
 {
 	return QDateTime::currentDateTime().toString("yyyy-MM-dd_hh:mm:ss.zzz");
 }

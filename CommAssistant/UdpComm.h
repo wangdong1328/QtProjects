@@ -18,7 +18,7 @@ class CUdpComm  : public CBaseComm
 	Q_OBJECT
 
 public:
-	CUdpComm(QObject *parent);
+	CUdpComm(QObject *parent = nullptr);
 	~CUdpComm();
 
 	/**

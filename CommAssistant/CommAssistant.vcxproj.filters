@@ -64,6 +64,15 @@
     <ClCompile Include="CustomIntValidator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TcpWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpClientComm.cpp">
+      <Filter>Source Files\Comm</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpServerComm.cpp">
+      <Filter>Source Files\Comm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="UdpComm.h">
@@ -81,6 +90,15 @@
     <QtMoc Include="CustomIntValidator.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="TcpWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="TcpClientComm.h">
+      <Filter>Header Files\Comm</Filter>
+    </QtMoc>
+    <QtMoc Include="TcpServerComm.h">
+      <Filter>Header Files\Comm</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Comm_Def.h">
@@ -89,6 +107,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="UdpWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="TcpWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
