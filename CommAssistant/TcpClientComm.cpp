@@ -10,6 +10,8 @@ CTcpClientComm::CTcpClientComm(QObject *parent)
 			QByteArray ba = m_pTcpSocket->readAll();
 			emit RecvMsgSignal(ba);
 		});
+
+	connect(m_pTcpSocket, &QTcpSocket::errorOccurred, this, &CTcpClientComm::OnErrorOccurredSlot);
 }
 
 CTcpClientComm::~CTcpClientComm()

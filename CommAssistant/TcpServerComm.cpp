@@ -35,7 +35,7 @@ int CTcpServerComm::Send(QByteArray baContent, QString strClientInfo, int iTimeI
 	{
 		for (auto iter = m_mapTcpClientSockets.begin(); iter != m_mapTcpClientSockets.end(); ++iter)
 		{
-			iter.value()->write(baContent);
+			iRet = iter.value()->write(baContent);
 		}
 	}
 	else

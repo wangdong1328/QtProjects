@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include "Comm_Def.h"
+#include <QAbstractsocket>
 
 class CBaseComm  : public QObject
 {
@@ -52,6 +53,10 @@ public:
 	 * @return :QStringList
 	 */
 	virtual QStringList GetClientConnectList() { return QStringList(); }
+
+protected slots:
+	//处理错误信息
+	void OnErrorOccurredSlot(QAbstractSocket::SocketError socketError);
 
 signals:
 	//接收消息信号

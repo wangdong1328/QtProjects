@@ -81,7 +81,7 @@ void CUdpWidget::InitUI()
 			}
 
 		});
-
+	  
 	//处理发送按钮
 	connect(ui.pushButton_clear, &QPushButton::clicked, this, [=]()
 		{

@@ -48,8 +48,6 @@ public:
 private slots:
 	//接收报文槽函数
 	void OnReadPendingDatagramsSlot();
-	//处理网络错误槽函数
-	void OnErrorOccurredSlot(QAbstractSocket::SocketError);
 
 private:
 	//网络通信指针
