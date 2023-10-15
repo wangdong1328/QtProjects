@@ -116,7 +116,9 @@ void CUdpWidget::InitUI()
 					QFile file(strFilePath);
 					if (file.open(QIODevice::ReadOnly) && m_pUdpComm)
 					{
+						ui.pushButton_send->setEnabled(false);
 						m_pUdpComm->Send(file.readAll(), ui.lineEdit_sendInterval->text().toInt());
+						ui.pushButton_send->setEnabled(true);
 						file.close();
 					}
 					else
