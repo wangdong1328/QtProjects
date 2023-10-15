@@ -12,13 +12,5 @@ public:
     ~CCommAssistant();
 
 private:
-    /**
-     * @brief  :初始化界面UI
-     *
-     * @return :void
-     */
-    void InitUI();
-
-private:
     Ui::CCommAssistantClass ui;
 };

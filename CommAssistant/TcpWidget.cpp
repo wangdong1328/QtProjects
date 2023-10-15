@@ -1,23 +1,41 @@
 #include "TcpWidget.h"
 #include "CustomIntValidator.h"
-#include "CommManager.h"
 #include <QDateTime>
 #include <QFileDialog>
 #include <QMessageBox>
+#include "TcpClientComm.h"
+#include "TcpServerComm.h"
 
 CTcpWidget::CTcpWidget(QWidget *parent)
-	: QWidget(parent)
+	: QWidget(parent), m_pCurrentComm(NULL)
 {
 	ui.setupUi(this);
 
-	//默认创建的时TCP通信的客户端
-	m_eCommType = ECOMMTYPE_TCP_CLIENT;
+	m_strCurClientEndpoint = "";
+	//创建通信类指针
+	m_pTcpClientComm = new CTcpClientComm(this);
+	m_pTcpServerComm = new CTcpServerComm(this);
+	m_pCurrentComm = m_pTcpClientComm;
 
 	InitUI();
 }
 
 CTcpWidget::~CTcpWidget()
-{}
+{
+	if (m_pTcpClientComm)
+	{
+		delete m_pTcpClientComm;
+		m_pTcpClientComm = nullptr;
+	}
+
+	if (m_pTcpServerComm)
+	{
+		delete m_pTcpServerComm;
+		m_pTcpServerComm = nullptr;
+	}
+
+	m_pCurrentComm = NULL;
+}
 
 void CTcpWidget::InitUI()
 {
@@ -32,6 +50,11 @@ void CTcpWidget::InitUI()
 	ui.pushButton_close->setEnabled(false);
 	//初始化禁用发送按钮
 	ui.pushButton_send->setEnabled(false);
+
+	//设置不可见
+	ui.checkBox_clients->setVisible(false);
+	ui.comboBox_clients->setVisible(false);
+	ui.label_clientList->setVisible(false);
 	
 	//打开按钮
 	connect(ui.pushButton_open, &QPushButton::clicked, this, [=]()
@@ -44,7 +67,10 @@ void CTcpWidget::InitUI()
 			sEndPointSettings.sPeerEndPoint.strIPAddr = ui.lineEdit_peerIp->text();
 			sEndPointSettings.sPeerEndPoint.usPort = ui.lineEdit_peerPort->text().toUShort();
 
-			CCommManager::GetInstance()->Register(m_eCommType, sEndPointSettings);
+			if (m_pCurrentComm)
+			{
+				m_pCurrentComm->BindEndPoint(sEndPointSettings);
+			}
 		});
 
 	//处理关闭按钮
@@ -54,20 +80,32 @@ void CTcpWidget::InitUI()
 			ui.pushButton_send->setEnabled(false);
 			ui.pushButton_open->setEnabled(true);
 
-			CCommManager::GetInstance()->Unregister(m_eCommType);
+			if (m_pCurrentComm)
+			{
+				m_pCurrentComm->UnBindEndPoint();
+			}
 		});
 
 	//处理发送按钮
 	connect(ui.pushButton_send, &QPushButton::clicked, this, [=]()
 		{
-			if (CCommManager::GetInstance()->Send(m_eCommType,
-			ui.lineEdit_msg->text().toUtf8()) > 0)
+			if (m_pCurrentComm == m_pTcpClientComm)
 			{
-				ui.plainTextEdit_content->appendPlainText("[S" + GetCurrentDateTime() + "] "
-					+ ui.lineEdit_msg->text());
-
-				ui.lineEdit_msg->clear();
+				if (m_pCurrentComm->Send(ui.lineEdit_msg->text().toUtf8()) > 0)
+				{
+					ui.plainTextEdit_content->appendPlainText("[S" + GetCurrentDateTime() + "] "
+						+ ui.lineEdit_msg->text());
+				}
 			}
+			else if (m_pCurrentComm == m_pTcpServerComm)
+			{
+				if (m_pCurrentComm->Send(ui.lineEdit_msg->text().toUtf8(), m_strCurClientEndpoint) > 0)
+				{
+					ui.plainTextEdit_content->appendPlainText("[S" + GetCurrentDateTime() + "] "
+						+ ui.lineEdit_msg->text());
+				}
+			}
+			ui.lineEdit_msg->clear();
 		});
 
 	//处理选中服务器
@@ -75,13 +113,21 @@ void CTcpWidget::InitUI()
 		{
 			if (iValue > 0)
 			{
-				m_eCommType = ECOMMTYPE_TCP_SERVER;
+				m_pCurrentComm = m_pTcpServerComm;
 				ui.pushButton_open->setText("监听");
+
+				ui.checkBox_clients->setVisible(true);
+				ui.comboBox_clients->setVisible(true);
+				ui.label_clientList->setVisible(true);
 			}
 			else
 			{
-				m_eCommType = ECOMMTYPE_TCP_CLIENT;
+				m_pCurrentComm = m_pTcpClientComm;
 				ui.pushButton_open->setText("连接");
+
+				ui.checkBox_clients->setVisible(false);
+				ui.comboBox_clients->setVisible(false);
+				ui.label_clientList->setVisible(false);
 			}
 		});
 
@@ -98,9 +144,11 @@ void CTcpWidget::InitUI()
 				if (!strFilePath.isEmpty())
 				{
 					QFile file(strFilePath);
-					if (file.open(QIODevice::ReadOnly))
+					if (file.open(QIODevice::ReadOnly) && m_pCurrentComm)
 					{
-						CCommManager::GetInstance()->Send(m_eCommType, file.readAll(), ui.lineEdit_sendInterval->text().toInt());
+						ui.pushButton_send->setEnabled(false);
+						m_pCurrentComm->Send(file.readAll(), ui.lineEdit_sendInterval->text().toInt());
+						ui.pushButton_send->setEnabled(true);
 						file.close();
 					}
 					else
@@ -120,6 +168,55 @@ void CTcpWidget::InitUI()
 	connect(ui.pushButton_clear, &QPushButton::clicked, this, [=]()
 		{
 			ui.plainTextEdit_content->clear();
+		});
+
+	//处理客户端消息接收
+	connect(m_pTcpClientComm, &CTcpClientComm::RecvMsgSignal, this, [&](QString strMsg)
+		{
+			ui.plainTextEdit_content->appendPlainText("[R" + GetCurrentDateTime() + "] "
+				+ strMsg);
+		});
+
+	//处理服务端消息接收
+	connect(m_pTcpServerComm, &CTcpServerComm::RecvMsgSignal, this, [&](QString strMsg)
+		{
+			ui.plainTextEdit_content->appendPlainText("[R" + GetCurrentDateTime() + "] "
+				+ strMsg);
+		});
+
+	//处理服务端消息接收
+	connect(m_pTcpServerComm, &CTcpServerComm::ConnectMsgSignal, this, [&]()
+		{
+			ui.comboBox_clients->clear();
+			ui.comboBox_clients->addItems(m_pCurrentComm->GetClientConnectList());
+		});
+
+	//处理服务端消息接收
+	connect(m_pTcpServerComm, &CTcpServerComm::DisConnectMsgSignal, this, [&]()
+		{
+			ui.comboBox_clients->clear();
+			ui.comboBox_clients->addItems(m_pCurrentComm->GetClientConnectList());
+		});
+
+	connect(ui.checkBox_clients, &QCheckBox::stateChanged, this, [=](int iValue)
+		{
+			if (iValue > 0)
+			{
+				m_strCurClientEndpoint = "";
+			}
+			else
+			{
+				m_strCurClientEndpoint = ui.comboBox_clients->currentText();
+			}
+		});
+
+
+	connect(ui.comboBox_clients, &QComboBox::currentTextChanged, this, [=](QString strComBoxText)
+		{
+			if (!ui.checkBox_clients->isChecked())
+			{
+				m_strCurClientEndpoint = strComBoxText;
+			}
 		});
 }
 

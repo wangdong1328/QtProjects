@@ -22,6 +22,15 @@ public:
 	~CUdpComm();
 
 	/**
+	 * @brief  :发送消息
+	 *
+	 * @param  :baContent,发送的内容
+	 * @iTimeInterval  :时间间隔
+	 * @return :int
+	 */
+	int Send(QByteArray baContent, int iTimeInterval = 10) override;
+
+	/**
 	 * @brief  :设置端点
 	 *
 	 * @param  :sEndPoint
@@ -35,15 +44,6 @@ public:
 	 * @return :void
 	 */
 	void UnBindEndPoint() override;
-
-	/**
-	 * @brief  :发送消息
-	 *
-	 * @param  :baContent,发送的内容
-	 * @iTimeInterval  :时间间隔
-	 * @return :int
-	 */
-	int Send(QByteArray baContent, int iTimeInterval) override;
 
 private slots:
 	//接收报文槽函数

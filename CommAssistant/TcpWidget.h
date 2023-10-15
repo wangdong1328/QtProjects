@@ -4,6 +4,7 @@
 #include "ui_TcpWidget.h"
 #include "Comm_Def.h"
 
+class CBaseComm;
 class CTcpWidget  : public QWidget
 {
 	Q_OBJECT
@@ -28,6 +29,12 @@ public:
 
 private:
 	Ui::CTcpWidgetClass ui;
-	//存储当前类型
-	ECommType m_eCommType;
+	//Tcp客户端通信指针
+	CBaseComm* m_pTcpClientComm;
+	//Tcp服务端通信指针
+	CBaseComm* m_pTcpServerComm;
+	//当前通信类指针
+	CBaseComm* m_pCurrentComm;
+	//当前客户端端点
+	QString m_strCurClientEndpoint;
 };

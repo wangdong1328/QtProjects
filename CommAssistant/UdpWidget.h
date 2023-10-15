@@ -3,12 +3,13 @@
 #include <QWidget>
 #include "ui_UdpWidget.h"
 
+class CBaseComm;
 class CUdpWidget : public QWidget
 {
 	Q_OBJECT
 
 public:
-	CUdpWidget(QWidget *parent = nullptr);
+	CUdpWidget(QWidget* parent = nullptr);
 	~CUdpWidget();
 
 	/**
@@ -27,4 +28,7 @@ public:
 
 private:
 	Ui::CUdpWidgetClass ui;
+
+	//UDP 通信类指针
+	CBaseComm* m_pUdpComm{ nullptr };
 };

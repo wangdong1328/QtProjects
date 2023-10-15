@@ -1,22 +1,30 @@
 #include "UdpWidget.h"
 #include "Comm_Def.h"
-#include "CommManager.h"
 #include <QDateTime>
 #include "CustomIntValidator.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QFile>
+#include "UdpComm.h"
 
 CUdpWidget::CUdpWidget(QWidget* parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
 
+	m_pUdpComm = new CUdpComm(this);
+
 	InitUI();
 }
 
 CUdpWidget::~CUdpWidget()
-{}
+{
+	if (m_pUdpComm)
+	{
+		delete m_pUdpComm;
+		m_pUdpComm = nullptr;
+	}
+}
 
 void CUdpWidget::InitUI()
 {
@@ -42,7 +50,10 @@ void CUdpWidget::InitUI()
 			sEndPointSettings.sPeerEndPoint.strIPAddr = ui.lineEdit_peerIp->text();
 			sEndPointSettings.sPeerEndPoint.usPort = ui.lineEdit_peerPort->text().toUShort();
 
-			CCommManager::GetInstance()->Register(ECOMMTYPE_UDP, sEndPointSettings);
+			if (m_pUdpComm)
+			{
+				m_pUdpComm->BindEndPoint(sEndPointSettings);
+			}
 		});
 
 	//处理关闭按钮
@@ -52,14 +63,16 @@ void CUdpWidget::InitUI()
 			ui.pushButton_send->setEnabled(false);
 			ui.pushButton_open->setEnabled(true);
 
-			CCommManager::GetInstance()->Unregister(ECOMMTYPE_UDP);
+			if (m_pUdpComm)
+			{
+				m_pUdpComm->UnBindEndPoint();
+			}
 		});
 
 	//处理发送按钮
 	connect(ui.pushButton_send, &QPushButton::clicked, this, [=]()
 		{
-			if (CCommManager::GetInstance()->Send(ECOMMTYPE_UDP, 
-			ui.lineEdit_msg->text().toUtf8()) > 0)
+			if (m_pUdpComm && (m_pUdpComm->Send(ui.lineEdit_msg->text().toUtf8()) > 0))
 			{
 				ui.plainTextEdit_content->appendPlainText("[S" + GetCurrentDateTime() + "] "
 					+ ui.lineEdit_msg->text());
@@ -82,15 +95,10 @@ void CUdpWidget::InitUI()
 	//设置消息显示区只读
 	ui.plainTextEdit_content->setReadOnly(true);
 
-	//处理接收内容
-	connect(CCommManager::GetInstance(), &CCommManager::RecvMsgSignal, this,
-		[=](ECommType eCommType, const QString strMsg)
+	connect(m_pUdpComm, &CUdpComm::RecvMsgSignal, this, [&](QString strMsg)
 		{
-			if (ECOMMTYPE_UDP == eCommType)
-			{
-				ui.plainTextEdit_content->appendPlainText("[R" + GetCurrentDateTime() + "] "
-					+ strMsg);
-			}
+			ui.plainTextEdit_content->appendPlainText("[R" + GetCurrentDateTime() + "] "
+								+ strMsg);
 		});
 
 	//设置发送文件状态
@@ -106,9 +114,9 @@ void CUdpWidget::InitUI()
 				if (!strFilePath.isEmpty())
 				{
 					QFile file(strFilePath);
-					if (file.open(QIODevice::ReadOnly))
+					if (file.open(QIODevice::ReadOnly) && m_pUdpComm)
 					{
-						CCommManager::GetInstance()->Send(ECOMMTYPE_UDP, file.readAll(), ui.lineEdit_sendInterval->text().toInt());
+						m_pUdpComm->Send(file.readAll(), ui.lineEdit_sendInterval->text().toInt());
 						file.close();
 					}
 					else

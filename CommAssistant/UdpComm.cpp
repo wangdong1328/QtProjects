@@ -1,7 +1,6 @@
 
 #include "UdpComm.h"
 #include <QNetworkDatagram>
-#include "CommManager.h"
 
 static const int MAX_LENGTH = 2048;
 
@@ -32,9 +31,7 @@ void CUdpComm::BindEndPoint(const SEndPointSettings sEndPoint)
 	}
 	else
 	{
-		//上报网络信息
-		CCommManager::GetInstance()->RecvMsg(ECOMMTYPE_UDP, QString("[UDP]: bind port failed!")
-			.toUtf8());
+		emit RecvMsgSignal("[UDP]: bind port failed!");
 	}
 }
 
@@ -160,8 +157,7 @@ void CUdpComm::OnErrorOccurredSlot(QAbstractSocket::SocketError socketError)
 		break;
 	}
 	//上报网络错误结果
-	CCommManager::GetInstance()->RecvMsg(ECOMMTYPE_UDP, 
-		QString("[UDP]: SocketError reason is %1. ").arg(strErrorReason).toUtf8());
+	emit RecvMsgSignal(QString("[UDP]: SocketError reason is %1. ").arg(strErrorReason));
 }
 
 void CUdpComm::OnReadPendingDatagramsSlot()
@@ -173,7 +169,7 @@ void CUdpComm::OnReadPendingDatagramsSlot()
 		if ((datagram.senderAddress().toString() == m_strPeerIPAddr) &&
 			(m_usPeerPort == datagram.senderPort()))
 		{
-			CCommManager::GetInstance()->RecvMsg(ECOMMTYPE_UDP, datagram.data());
+			emit RecvMsgSignal(datagram.data());
 		}
 	}
 }

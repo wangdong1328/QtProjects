@@ -21,12 +21,13 @@ public:
 	~CTcpClientComm();
 
 	/**
-	 * @brief  :发送文件内容接口
+	 * @brief  :发送文件接收
 	 *
-	 * @param  :baContent, 发送的内容
+	 * @param  :baContent
+	 * @param  :iTimeInterval
 	 * @return :int
 	 */
-	int Send(QByteArray baContent, int iTimeInterval) override;
+	int Send(QByteArray baContent, int iTimeInterval = 10) override;
 
 	/**
 	 * @brief  :设置端点

@@ -90,7 +90,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseComm.cpp" />
-    <ClCompile Include="CommManager.cpp" />
     <ClCompile Include="CustomIntValidator.cpp" />
     <ClCompile Include="TcpClientComm.cpp" />
     <ClCompile Include="TcpServerComm.cpp" />
@@ -110,9 +109,6 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="BaseComm.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="CommManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Comm_Def.h" />

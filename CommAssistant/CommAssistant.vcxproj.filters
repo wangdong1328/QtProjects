@@ -52,9 +52,6 @@
     <ClCompile Include="BaseComm.cpp">
       <Filter>Source Files\Comm</Filter>
     </ClCompile>
-    <ClCompile Include="CommManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="UdpComm.cpp">
       <Filter>Source Files\Comm</Filter>
     </ClCompile>
@@ -80,9 +77,6 @@
     </QtMoc>
     <QtMoc Include="BaseComm.h">
       <Filter>Header Files\Comm</Filter>
-    </QtMoc>
-    <QtMoc Include="CommManager.h">
-      <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="UdpWidget.h">
       <Filter>Header Files</Filter>

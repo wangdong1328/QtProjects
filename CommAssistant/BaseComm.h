@@ -12,12 +12,14 @@ public:
 	virtual ~CBaseComm();
 
 	/**
-	 * @brief  :发送文件内容接口
+	 * @brief  :发送消息接口
 	 *
-	 * @param  :baContent, 发送的内容
+	 * @param  :baContent
+	 * @param  :iTimeInterval
 	 * @return :int
 	 */
-	virtual int Send(QByteArray baContent, int iTimeInterval) = 0;
+	virtual int Send(QByteArray baContent, int iTimeInterval = 10) = 0;
+
 
 	/**
 	 * @brief  :设置端点
@@ -34,6 +36,29 @@ public:
 	 */
 	virtual void UnBindEndPoint() = 0;
 
+	/**
+	 * @brief  : 这个重载可以选择实现,发送文件内容接口
+	 *
+	 * @param  :baContent
+	 * @param  :iTimeInterval
+	 * @param  :strClientInfo, 这个参数只供发送Tcp服务端使用
+	 * @return :int
+	 */
+	virtual int Send(QByteArray baContent, QString strClientInfo, int iTimeInterval = 10) { return 0; }
+
+	/**
+	 * @brief  :获取客户端列表
+	 *
+	 * @return :QStringList
+	 */
+	virtual QStringList GetClientConnectList() { return QStringList(); }
+
 signals:
-	void ReportInfoSignal(QByteArray);
+	//接收消息信号
+	void RecvMsgSignal(const QString strMsg);
+	//接收消息信号
+	void ConnectMsgSignal();
+	//接收消息信号
+	void DisConnectMsgSignal();
+
 };

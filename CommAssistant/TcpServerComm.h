@@ -10,6 +10,9 @@
  * 
  */
 #include "BaseComm.h"
+#include <QTcpServer>
+#include <QTcpSocket>
+#include <QMap>
 
 class CTcpServerComm  : public CBaseComm
 {
@@ -20,12 +23,19 @@ public:
 	~CTcpServerComm();
 
 	/**
+	 * 
+	 */
+	int Send(QByteArray baContent, int iTimeInterval = 10) override;
+
+	/**
 	 * @brief  :发送文件内容接口
 	 *
-	 * @param  :baContent, 发送的内容
+	 * @param  :baContent
+	 * @param  :iTimeInterval
+	 * @param  :strClientInfo
 	 * @return :int
 	 */
-	int Send(QByteArray baContent, int iTimeInterval) override;
+	int Send(QByteArray baContent, QString strClientInfo, int iTimeInterval = 10) override;
 
 	/**
 	 * @brief  :设置端点
@@ -41,4 +51,33 @@ public:
 	 * @return :void
 	 */
 	void UnBindEndPoint() override;
+
+	/**
+	 * @brief  :获取客户端连接列表
+	 *
+	 * @return :QStringList
+	 */
+	QStringList GetClientConnectList();
+
+private:
+	/**
+	 * @brief  :移除客户端连接
+	 *
+	 * @param  :pClientSocket
+	 * @return :void
+	 */
+	void RemoveClientConnectSocket(QTcpSocket* pClientSocket);
+
+	/**
+	 * @brief  :处理客户端socket
+	 *
+	 * @return :void
+	 */
+	void DealWithClientSocketConnect(QTcpSocket* pClientSocket);
+
+private:
+	//TCP服务器通信指针
+	QTcpServer* m_pTcpServer{ nullptr };
+	//TCP通信客户端Socket列表
+	QMap<QString, QTcpSocket*> m_mapTcpClientSockets;
 };
