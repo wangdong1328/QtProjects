@@ -81,7 +81,7 @@ void CUdpWidget::InitUI()
 			}
 
 		});
-	  
+
 	//处理发送按钮
 	connect(ui.pushButton_clear, &QPushButton::clicked, this, [=]()
 		{
@@ -98,7 +98,7 @@ void CUdpWidget::InitUI()
 	connect(m_pUdpComm, &CUdpComm::RecvMsgSignal, this, [&](QString strMsg)
 		{
 			ui.plainTextEdit_content->appendPlainText("[R" + GetCurrentDateTime() + "] "
-								+ strMsg);
+				+ strMsg);
 		});
 
 	//设置发送文件状态

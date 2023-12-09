@@ -46,7 +46,7 @@ int CUdpComm::Send(QByteArray baContent, int iTimeInterval)
 {
 	int iRet = 0;
 	//发送消息不为空时，发送消息
-	if (m_pUdpSocket && !baContent.isEmpty())
+	if (m_pUdpSocket && (!baContent.isEmpty()))
 	{
 		int iSize = baContent.count();
 		int iSendPackageCount = baContent.count() / MAX_LENGTH;

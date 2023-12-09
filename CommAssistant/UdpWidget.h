@@ -30,5 +30,5 @@ private:
 	Ui::CUdpWidgetClass ui;
 
 	//UDP 通信类指针
-	CBaseComm* m_pUdpComm{ nullptr };
+	CBaseComm* m_pUdpComm = nullptr;
 };

@@ -77,7 +77,7 @@ private:
 
 private:
 	//TCP服务器通信指针
-	QTcpServer* m_pTcpServer{ nullptr };
+	QTcpServer* m_pTcpServer = nullptr;
 	//TCP通信客户端Socket列表
 	QMap<QString, QTcpSocket*> m_mapTcpClientSockets;
 };

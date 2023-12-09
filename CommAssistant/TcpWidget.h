@@ -5,12 +5,12 @@
 #include "Comm_Def.h"
 
 class CBaseComm;
-class CTcpWidget  : public QWidget
+class CTcpWidget : public QWidget
 {
 	Q_OBJECT
 
 public:
-	CTcpWidget(QWidget *parent = nullptr);
+	CTcpWidget(QWidget* parent = nullptr);
 	~CTcpWidget();
 
 	/**
@@ -30,11 +30,11 @@ public:
 private:
 	Ui::CTcpWidgetClass ui;
 	//Tcp客户端通信指针
-	CBaseComm* m_pTcpClientComm;
+	CBaseComm* m_pTcpClientComm = nullptr;
 	//Tcp服务端通信指针
-	CBaseComm* m_pTcpServerComm;
+	CBaseComm* m_pTcpServerComm = nullptr;
 	//当前通信类指针
-	CBaseComm* m_pCurrentComm;
+	CBaseComm* m_pCurrentComm = nullptr;
 	//当前客户端端点
-	QString m_strCurClientEndpoint;
+	QString m_strCurClientEndpoint = "";
 };

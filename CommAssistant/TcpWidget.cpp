@@ -6,8 +6,7 @@
 #include "TcpClientComm.h"
 #include "TcpServerComm.h"
 
-CTcpWidget::CTcpWidget(QWidget *parent)
-	: QWidget(parent), m_pCurrentComm(NULL)
+CTcpWidget::CTcpWidget(QWidget* parent) : QWidget(parent)
 {
 	ui.setupUi(this);
 
@@ -34,7 +33,7 @@ CTcpWidget::~CTcpWidget()
 		m_pTcpServerComm = nullptr;
 	}
 
-	m_pCurrentComm = NULL;
+	m_pCurrentComm = nullptr;
 }
 
 void CTcpWidget::InitUI()
@@ -55,7 +54,7 @@ void CTcpWidget::InitUI()
 	ui.checkBox_clients->setVisible(false);
 	ui.comboBox_clients->setVisible(false);
 	ui.label_clientList->setVisible(false);
-	
+
 	//打开按钮
 	connect(ui.pushButton_open, &QPushButton::clicked, this, [=]()
 		{
@@ -187,15 +186,22 @@ void CTcpWidget::InitUI()
 	//处理服务端消息接收
 	connect(m_pTcpServerComm, &CTcpServerComm::ConnectMsgSignal, this, [&]()
 		{
-			ui.comboBox_clients->clear();
-			ui.comboBox_clients->addItems(m_pCurrentComm->GetClientConnectList());
+			if (m_pCurrentComm)
+			{
+				ui.comboBox_clients->clear();
+				ui.comboBox_clients->addItems(m_pCurrentComm->GetClientConnectList());
+			}
+			
 		});
 
 	//处理服务端消息接收
 	connect(m_pTcpServerComm, &CTcpServerComm::DisConnectMsgSignal, this, [&]()
 		{
-			ui.comboBox_clients->clear();
-			ui.comboBox_clients->addItems(m_pCurrentComm->GetClientConnectList());
+			if (m_pCurrentComm)
+			{
+				ui.comboBox_clients->clear();
+				ui.comboBox_clients->addItems(m_pCurrentComm->GetClientConnectList());
+			}
 		});
 
 	connect(ui.checkBox_clients, &QCheckBox::stateChanged, this, [=](int iValue)

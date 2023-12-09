@@ -89,5 +89,5 @@ void CBaseComm::OnErrorOccurredSlot(QAbstractSocket::SocketError socketError)
 		break;
 	}
 	//上报网络错误结果
-	emit RecvMsgSignal(QString("[UDP]: SocketError reason is %1. ").arg(strErrorReason));
+	emit RecvMsgSignal(QString("SocketError reason is %1. ").arg(strErrorReason));
 }

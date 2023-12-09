@@ -33,17 +33,17 @@ int CTcpServerComm::Send(QByteArray baContent, QString strClientInfo, int iTimeI
 	int iRet = -1;
 	if (strClientInfo.isEmpty())
 	{
-		for (auto iter = m_mapTcpClientSockets.begin(); iter != m_mapTcpClientSockets.end(); ++iter)
-		{
-			iRet = iter.value()->write(baContent);
-		}
+		iRet = Send(baContent, iTimeInterval);
 	}
 	else
 	{
 		auto iter = m_mapTcpClientSockets.find(strClientInfo);
 		if (iter != m_mapTcpClientSockets.end())
 		{
-			iRet = iter.value()->write(baContent);
+			if (iter.value())
+			{
+				iRet = iter.value()->write(baContent);
+			}
 		}
 	}
 
@@ -54,7 +54,8 @@ void CTcpServerComm::BindEndPoint(const SEndPointSettings sEndPoint)
 {
 	if (m_pTcpServer)
 	{
-		if (m_pTcpServer->listen(QHostAddress(sEndPoint.sPeerEndPoint.strIPAddr), sEndPoint.sPeerEndPoint.usPort))
+		if (m_pTcpServer->listen(QHostAddress(sEndPoint.sPeerEndPoint.strIPAddr),
+			sEndPoint.sPeerEndPoint.usPort))
 		{
 			connect(m_pTcpServer, &QTcpServer::newConnection, this, [&]()
 				{
@@ -64,7 +65,8 @@ void CTcpServerComm::BindEndPoint(const SEndPointSettings sEndPoint)
 
 						DealWithClientSocketConnect(pTcpSocket);
 
-						QString strClientEndPoint = QString("%1:%2").arg(pTcpSocket->peerAddress().toString()).arg(pTcpSocket->peerPort());
+						QString strClientEndPoint = QString("%1:%2")
+							.arg(pTcpSocket->peerAddress().toString()).arg(pTcpSocket->peerPort());
 
 						//存储连接的客户端
 						m_mapTcpClientSockets[strClientEndPoint] = pTcpSocket;
@@ -127,7 +129,9 @@ void CTcpServerComm::DealWithClientSocketConnect(QTcpSocket* pClientSocket)
 		{
 			QByteArray ba = pClientSocket->readAll();
 
-			QString strClientEndPoint = QString("[%1:%2]").arg(qobject_cast<QTcpSocket*>(sender())->peerAddress().toString()).arg(qobject_cast<QTcpSocket*>(sender())->peerPort());
+			QString strClientEndPoint = QString("[%1:%2]")
+				.arg(qobject_cast<QTcpSocket*>(sender())->peerAddress().toString())
+				.arg(qobject_cast<QTcpSocket*>(sender())->peerPort());
 
 			emit RecvMsgSignal(strClientEndPoint + ba);
 

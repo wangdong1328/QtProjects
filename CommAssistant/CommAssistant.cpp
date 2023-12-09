@@ -14,7 +14,8 @@ CCommAssistant::CCommAssistant(QWidget *parent)
 
     connect(ui.action_aboutAuthor, &QAction::triggered, this, [&]()
         {
-            QMessageBox::about(this, "作者信息", "开发者：wangdong,有其他技术问题请联系邮箱：wangdong1328@163.com 或者 qq:1941591018!");
+            QMessageBox::about(this, "作者信息", "开发者：wangdong,有其他技术问题请联系邮箱：  \
+                wangdong1328@163.com 或者 qq:1941591018!");
         });
 }
 

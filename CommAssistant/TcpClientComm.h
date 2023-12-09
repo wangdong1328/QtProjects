@@ -5,23 +5,23 @@
  * @brief  :TCP客户端通信类
  * @version: 0.1
  * @date   :2023-10-14
- * 
+ *
  * @copyright Copyright (c) 2023
- * 
+ *
  */
 #include "BaseComm.h"
 #include <QTcpSocket>
 
-class CTcpClientComm  : public CBaseComm
+class CTcpClientComm : public CBaseComm
 {
 	Q_OBJECT
 
 public:
-	CTcpClientComm(QObject *parent = nullptr);
+	CTcpClientComm(QObject* parent = nullptr);
 	~CTcpClientComm();
 
 	/**
-	 * @brief  :发送文件接收
+	 * @brief  :发送消息
 	 *
 	 * @param  :baContent
 	 * @param  :iTimeInterval

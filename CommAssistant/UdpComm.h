@@ -2,7 +2,7 @@
 /**
  * @file   ：UdpComm.h
  * @author ：wangdong (wangdong1328@163.com)
- * @brief  ：.
+ * @brief  ：UDP 通信类
  * @version: 0.1
  * @date   ：2023-10-10
  * 

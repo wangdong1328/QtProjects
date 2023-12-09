@@ -61,9 +61,9 @@ protected slots:
 signals:
 	//接收消息信号
 	void RecvMsgSignal(const QString strMsg);
-	//接收消息信号
+	//连接消息信号
 	void ConnectMsgSignal();
-	//接收消息信号
+	//断开连接信号
 	void DisConnectMsgSignal();
 
 };
