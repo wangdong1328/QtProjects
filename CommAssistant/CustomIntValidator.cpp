@@ -20,31 +20,31 @@ CCustomIntValidator::~CCustomIntValidator()
  * @param  :iSize
  * @return :QValidator::State
  */
-QValidator::State CCustomIntValidator::validate(QString & strInput, int& iSize) const
+QValidator::State CCustomIntValidator::validate(QString& strInput, int& iSize) const
 {
-    if (strInput.isEmpty())
-    {
-        return QValidator::Intermediate;
-    }
-    //这里判断超过位数了，变成无效的参数
-    int intValue = strInput.toInt();
-    if (intValue > top() || intValue < bottom())
-    {
-        return QIntValidator::Invalid;
-    }
+	if (strInput.isEmpty())
+	{
+		return QValidator::Intermediate;
+	}
+	//这里判断超过位数了，变成无效的参数
+	int intValue = strInput.toInt();
+	if (intValue > top() || intValue < bottom())
+	{
+		return QIntValidator::Invalid;
+	}
 	return QIntValidator::validate(strInput, iSize);
 }
 
 //当验证通不过时，通过调用 QValidator::fixedup()是这个函数修复错误。
-void CCustomIntValidator::fixup(QString & input) const
+void CCustomIntValidator::fixup(QString& input) const
 {
-    int intValue = input.toInt();
-    if (intValue < bottom())
-    {
-        input = QString("%1").arg(bottom());
-    }
-    else if (intValue > top())
-    {
-        input = QString("%1").arg(top());
-    }
+	int intValue = input.toInt();
+	if (intValue < bottom())
+	{
+		input = QString("%1").arg(bottom());
+	}
+	else if (intValue > top())
+	{
+		input = QString("%1").arg(top());
+	}
 }

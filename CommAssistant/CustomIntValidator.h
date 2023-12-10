@@ -11,13 +11,13 @@
  */
 #include <QIntValidator>
 
-class CCustomIntValidator  : public QIntValidator
+class CCustomIntValidator : public QIntValidator
 {
 	Q_OBJECT
 
 public:
 	CCustomIntValidator(QObject* parent);
-	CCustomIntValidator(int bottom, int top, QObject *parent);
+	CCustomIntValidator(int bottom, int top, QObject* parent);
 	~CCustomIntValidator();
 
 	/**

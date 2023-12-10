@@ -1,6 +1,6 @@
 #include "TcpClientComm.h"
 
-CTcpClientComm::CTcpClientComm(QObject *parent)
+CTcpClientComm::CTcpClientComm(QObject* parent)
 	: CBaseComm(parent)
 {
 	m_pTcpSocket = new QTcpSocket(this);
