@@ -5,25 +5,25 @@
  * @brief  :Tcp服务器通信类
  * @version: 0.1
  * @date   :2023-10-14
- * 
+ *
  * @copyright Copyright (c) 2023
- * 
+ *
  */
 #include "BaseComm.h"
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QMap>
 
-class CTcpServerComm  : public CBaseComm
+class CTcpServerComm : public CBaseComm
 {
 	Q_OBJECT
 
 public:
-	CTcpServerComm(QObject *parent = nullptr);
+	CTcpServerComm(QObject* parent = nullptr);
 	~CTcpServerComm();
 
 	/**
-	 * 
+	 *
 	 */
 	int Send(QByteArray baContent, int iTimeInterval = 10) override;
 

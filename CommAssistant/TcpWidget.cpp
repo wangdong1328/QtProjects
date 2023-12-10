@@ -191,7 +191,7 @@ void CTcpWidget::InitUI()
 				ui.comboBox_clients->clear();
 				ui.comboBox_clients->addItems(m_pCurrentComm->GetClientConnectList());
 			}
-			
+
 		});
 
 	//处理服务端消息接收
