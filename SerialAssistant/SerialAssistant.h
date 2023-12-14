@@ -31,13 +31,6 @@ private:
 	void Init();
 
 	/**
-	 * @brief  初始化信号槽函数连接
-	 *
-	 * @return void
-	 */
-	void InitConnect();
-
-	/**
 	 * @brief 获取当前日期时间
 	 *
 	 * @return QString
@@ -46,7 +39,11 @@ private:
 
 private slots:
 	// 打开关闭按钮槽函数
-	void OnPushButton_Open_Slot();
+	void OnPushButtonOpenSlot();
+	//发送按钮槽函数
+	void OnPushButtonSendSlot();
+	//接收消息槽函数
+	void OnRecvMessageSlot();
 
 private:
 	Ui::SerialAssistantClass ui;
